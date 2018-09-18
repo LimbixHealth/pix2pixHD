@@ -8,27 +8,27 @@ from PIL import Image
 class AlignedDataset(BaseDataset):
     def initialize(self, opt):
         self.opt = opt
-        self.root = opt.dataroot    
+        self.root = opt.dataroot.strip()
 
         ### input A (label maps)
         dir_A = '_A' if self.opt.label_nc == 0 else '_label'
-        self.dir_A = os.path.join(opt.dataroot, opt.phase + dir_A)
+        self.dir_A = os.path.join(self.root, opt.phase + dir_A)
         self.A_paths = sorted(make_dataset(self.dir_A))
 
         ### input B (real images)
         if opt.isTrain:
             dir_B = '_B' if self.opt.label_nc == 0 else '_img'
-            self.dir_B = os.path.join(opt.dataroot, opt.phase + dir_B)  
+            self.dir_B = os.path.join(self.root, opt.phase + dir_B)  
             self.B_paths = sorted(make_dataset(self.dir_B))
 
         ### instance maps
         if not opt.no_instance:
-            self.dir_inst = os.path.join(opt.dataroot, opt.phase + '_inst')
+            self.dir_inst = os.path.join(self.root, opt.phase + '_inst')
             self.inst_paths = sorted(make_dataset(self.dir_inst))
 
         ### load precomputed instance-wise encoded features
         if opt.load_features:                              
-            self.dir_feat = os.path.join(opt.dataroot, opt.phase + '_feat')
+            self.dir_feat = os.path.join(self.root, opt.phase + '_feat')
             print('----------- loading features from %s ----------' % self.dir_feat)
             self.feat_paths = sorted(make_dataset(self.dir_feat))
 
